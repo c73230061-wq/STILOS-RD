@@ -3109,14 +3109,13 @@ async function addP(){
   if(s && s.src){
     const img=new Image();
     img.onload=async()=>{
-      // Render canvas at 400x534 (3:4)
-      const canvas=document.createElement('canvas');canvas.width=400;canvas.height=534;
+      // Render canvas at 600x800 (3:4)
+      const canvas=document.createElement('canvas');canvas.width=600;canvas.height=800;
       const ctx=canvas.getContext('2d');
       const iw=img.naturalWidth,ih=img.naturalHeight;
-      const scale=s.zoom*Math.max(400/iw,534/ih);
-      ctx.drawImage(img,(400-iw*scale)/2+s.dx,(534-ih*scale)/2+s.dy,iw*scale,ih*scale);
-      // Compress to ~60KB for Firestore
-      const dataUrl = canvas.toDataURL('image/jpeg',0.72);
+      const scale=s.zoom*Math.max(600/iw,800/ih);
+      ctx.drawImage(img,(600-iw*scale)/2+s.dx,(800-ih*scale)/2+s.dy,iw*scale,ih*scale);
+      const dataUrl = canvas.toDataURL('image/jpeg',0.88);
       await _finalize(dataUrl);
     };
     img.onerror=async()=>{ await _finalize(null); };
@@ -3187,12 +3186,12 @@ async function saveEM(){
   if(s && s.src && s.src !== p.img){
     const img=new Image();
     img.onload=async()=>{
-      const canvas=document.createElement('canvas');canvas.width=400;canvas.height=534;
+      const canvas=document.createElement('canvas');canvas.width=600;canvas.height=800;
       const ctx=canvas.getContext('2d');
       const iw=img.naturalWidth,ih=img.naturalHeight;
-      const scale=s.zoom*Math.max(400/iw,534/ih);
-      ctx.drawImage(img,(400-iw*scale)/2+s.dx,(534-ih*scale)/2+s.dy,iw*scale,ih*scale);
-      const dataUrl=canvas.toDataURL('image/jpeg',0.72);
+      const scale=s.zoom*Math.max(600/iw,800/ih);
+      ctx.drawImage(img,(600-iw*scale)/2+s.dx,(800-ih*scale)/2+s.dy,iw*scale,ih*scale);
+      const dataUrl=canvas.toDataURL('image/jpeg',0.88);
       await _finalize(dataUrl);
     };
     img.onerror=async()=>{ await _finalize(undefined); };
@@ -3205,8 +3204,8 @@ async function saveEM(){
 function renderAPL(){
   const el=document.getElementById('adm-pl');
   if(!prods.length){el.innerHTML='<div style="padding:28px;text-align:center;color:rgba(255,255,255,.2);font-size:.72rem;font-style:italic;letter-spacing:.06em">Aún no hay productos.</div>';return;}
-  el.innerHTML=prods.map(p=>{
-    const pid=JSON.stringify(p._fbId||p.id);
+  el.innerHTML=prods.map((p,i)=>{
+    const pid = p._fbId || p.id;
     return`
     <div class="adm-table-row">
       <div class="atr-img">${p.img?`<img src="${p.img}">`:'👗'}</div>
@@ -3214,8 +3213,8 @@ function renderAPL(){
       <div><div class="atr-price">${fmt(p.price)}</div>${p.priceM?`<div class="atr-size" style="color:#4caf50">M: ${fmt(p.priceM)}</div>`:''}<div class="atr-size">${p.sizeFrom&&p.sizeTo?`${p.sizeFrom}–${p.sizeTo}`:''}</div></div>
       <div class="atr-size">${p.category||''}</div>
       <div class="atr-actions">
-        <button class="xb gh" onclick="openEM(${pid})">✎</button>
-        <button class="xb d" onclick="delP(${pid})">✕</button>
+        <button class="xb gh" data-pid="${pid}" onclick="openEM(this.dataset.pid)">✎</button>
+        <button class="xb d" data-pid="${pid}" onclick="delP(this.dataset.pid)">✕</button>
       </div>
     </div>`;
   }).join('');
