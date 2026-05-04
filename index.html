@@ -458,6 +458,20 @@ a{text-decoration:none;color:inherit}
   border-top:1px solid rgba(0,0,0,.07);
   border-bottom:1px solid rgba(0,0,0,.07);
 }
+/* Desktop: center categories, show max 5, scroll if more */
+@media(min-width:769px){
+  .col-cats-scroll-wrap{
+    display:flex;
+    justify-content:center;
+    overflow-x:auto;
+    padding:0;
+  }
+  .col-cats-row{
+    max-width:calc(5 * 208px);
+    min-width:unset;
+    justify-content:flex-start;
+  }
+}
 .col-cat-item{
   display:flex;flex-direction:column;align-items:center;
   padding:0 24px;
@@ -623,7 +637,7 @@ a{text-decoration:none;color:inherit}
   background:linear-gradient(to right,transparent 60%,rgba(13,13,13,.5) 100%);
 }
 /* placeholder when no image */
-.nos-logo-ph{width:min(240px,40%);object-fit:contain;background:#fff;border-radius:50%;padding:16px;opacity:.7;position:relative;z-index:1}
+.nos-logo-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;z-index:1}
 .nos-right{
   display:grid;grid-template-columns:1fr 1fr;
   align-items:center;
@@ -730,6 +744,27 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,168,76,.1)}
 .footer-links{display:flex;gap:24px}
 .footer-links a{font-size:.56rem;color:rgba(255,255,255,.3);letter-spacing:.06em;transition:color .2s}
 .footer-links a:hover{color:var(--gold)}
+
+/* ANDRO LAB credit strip */
+.footer-andro{
+  background:#0a0a0a;
+  border-top:1px solid rgba(255,255,255,.04);
+  padding:10px 64px;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  font-size:.52rem;letter-spacing:.1em;color:rgba(255,255,255,.18);
+  text-transform:uppercase;
+}
+.andro-link{
+  display:inline-flex;align-items:center;gap:5px;
+  color:rgba(255,255,255,.35);
+  font-weight:700;letter-spacing:.18em;
+  transition:color .2s;
+  text-decoration:none;
+}
+.andro-link:hover{color:#25D366}
+@media(max-width:768px){
+  .footer-andro{padding:10px 16px;flex-wrap:wrap;text-align:center}
+}
 
 /* ══════════════════════════
    WA FLOAT
@@ -1731,7 +1766,16 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,168,76,.1)}
     <!-- background image or logo placeholder -->
     <img id="nos-bg-img" src="" alt="" class="nos-left-bg" style="display:none">
     <div class="nos-left-overlay" style="display:none" id="nos-overlay"></div>
-    <img src="" class="nos-logo-ph" id="nos-logo-ph" alt="Raw Desire Stilos">
+    <div class="nos-logo-ph" id="nos-logo-ph">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="width:min(200px,38%);opacity:.55;position:relative;z-index:1">
+        <circle cx="100" cy="100" r="96" fill="none" stroke="#c9a84c" stroke-width="1.5" stroke-dasharray="6 4"/>
+        <circle cx="100" cy="100" r="76" fill="none" stroke="#c9a84c" stroke-width="0.8" opacity=".5"/>
+        <text x="100" y="88" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="18" font-style="italic" fill="#c9a84c" letter-spacing="2">Raw Desire</text>
+        <text x="100" y="110" text-anchor="middle" font-family="'Montserrat',sans-serif" font-size="9" fill="#c9a84c" letter-spacing="8" font-weight="300">STILOS</text>
+        <line x1="62" y1="120" x2="138" y2="120" stroke="#c9a84c" stroke-width="0.8" opacity=".6"/>
+        <text x="100" y="136" text-anchor="middle" font-family="'Montserrat',sans-serif" font-size="6.5" fill="#c9a84c" letter-spacing="5" opacity=".7">JEANS</text>
+      </svg>
+    </div>
   </div>
   <div class="nos-right">
     <div class="nos-main">
@@ -1852,6 +1896,13 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,168,76,.1)}
       <a href="#">Políticas de privacidad</a>
       <a href="#">Preguntas frecuentes</a>
     </div>
+  </div>
+  <div class="footer-andro">
+    <span>Diseñado y desarrollado por</span>
+    <a href="https://wa.me/573205270037" target="_blank" rel="noopener noreferrer" class="andro-link">
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="#25D366" style="flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      ANDRO LAB
+    </a>
   </div>
 </footer>
 
