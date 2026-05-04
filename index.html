@@ -52,12 +52,12 @@ function compressForFirestore(dataUrl, maxW, maxH, quality){
     img.src = dataUrl;
   });
 }
-// Para productos: máx 400×534px (3:4), calidad 0.72 → ~50-80KB
-window._compressProd = (dataUrl)=>compressForFirestore(dataUrl, 400, 534, 0.72);
-// Para sliders: máx 960×540px (16:9), calidad 0.75 → ~80-120KB
-window._compressSlide = (dataUrl)=>compressForFirestore(dataUrl, 960, 540, 0.75);
-// Para categorías: máx 320×427px (3:4), calidad 0.70
-window._compressCat = (dataUrl)=>compressForFirestore(dataUrl, 320, 427, 0.70);
+// Para productos: máx 600×800px (3:4), calidad 0.88 → ~120-200KB
+window._compressProd = (dataUrl)=>compressForFirestore(dataUrl, 600, 800, 0.88);
+// Para sliders: máx 1920×1080px (16:9), calidad 0.88 → ~300-700KB
+window._compressSlide = (dataUrl)=>compressForFirestore(dataUrl, 1920, 1080, 0.88);
+// Para categorías: máx 480×640px (3:4), calidad 0.85
+window._compressCat = (dataUrl)=>compressForFirestore(dataUrl, 480, 640, 0.85);
 
 // No se usa Storage — estas funciones son no-op para compatibilidad
 window._fbUploadImg = async (path, dataUrl)=>dataUrl;
