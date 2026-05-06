@@ -162,8 +162,36 @@ function applyConfig(){
     if(site.fb){ let el=document.getElementById('social-fb'); if(el) el.href=site.fb; el=document.getElementById('slide-fb'); if(el) el.href=site.fb; }
     if(site.tk){ let el=document.getElementById('social-tk'); if(el) el.href=site.tk; el=document.getElementById('slide-tk'); if(el) el.href=site.tk; }
     if(site.wa){ const el=document.getElementById('slide-wa'); if(el) el.href=`https://wa.me/${site.wa}`; }
+    // Galería Nosotros
+    renderNosGallery();
   }catch(e){ console.warn('applyConfig:',e); }
 }
+
+// ── GALERÍA NOSOTROS ──
+function renderNosGallery(){
+  const gallery = document.getElementById('nos-gallery');
+  const ph = document.getElementById('nos-gallery-ph');
+  if(!gallery) return;
+  const imgs = [];
+  for(let i=0;i<4;i++){ if(site['nosImg'+i]) imgs.push(site['nosImg'+i]); }
+  if(imgs.length===0){ gallery.innerHTML=''; if(ph) ph.style.display='flex'; return; }
+  if(ph) ph.style.display='none';
+  // Layout según cantidad de imágenes
+  const layouts = {
+    1:'1fr',
+    2:'1fr',
+    3:'1fr 1fr',
+    4:'1fr 1fr'
+  };
+  gallery.style.gridTemplateColumns = layouts[imgs.length]||'1fr 1fr';
+  gallery.style.gridTemplateRows = imgs.length<=2?'1fr':'1fr 1fr';
+  gallery.innerHTML = imgs.map((src,i)=>`
+    <div style="overflow:hidden;position:relative${i===0&&imgs.length===3?';grid-row:span 2':''}">
+      <img src="${src}" alt="Raw Desire Stilos - imagen ${i+1}" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+    </div>`).join('');
+}
+window.renderNosGallery = renderNosGallery;
+
 window._applyConfig = applyConfig;
 
 // ── Inicializar: cargar datos y arrancar listeners ──
@@ -1440,9 +1468,9 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,168,76,.1)}
   .col-cat-item{min-width:130px;padding:0 28px}
 
   /* Sección Nosotros: apilado vertical */
-  #nosotros{grid-template-columns:1fr}
-  .nos-right{grid-template-columns:1fr}
-  .nos-left{min-height:260px}
+  #nosotros{display:block!important}
+  #nos-grid{grid-template-columns:1fr!important}
+  #nos-gallery-wrap{min-height:260px}
   .nos-features{border-left:none;border-top:1px solid rgba(255,255,255,.06);padding:32px 44px}
 
   /* Footer: columna única */
@@ -1826,54 +1854,51 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,168,76,.1)}
 </section>
 
 <!-- ══ SOBRE NOSOTROS ══ -->
-<section id="nosotros">
-  <div class="nos-left">
-    <!-- background image or logo placeholder -->
-    <img id="nos-bg-img" src="" alt="Fondo sección nosotros Raw Desire Stilos" class="nos-left-bg" style="display:none">
-    <div class="nos-left-overlay" style="display:none" id="nos-overlay"></div>
-    <div class="nos-logo-ph" id="nos-logo-ph">
-      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="width:min(200px,38%);opacity:.55;position:relative;z-index:1">
-        <circle cx="100" cy="100" r="96" fill="none" stroke="#c9a84c" stroke-width="1.5" stroke-dasharray="6 4"/>
-        <circle cx="100" cy="100" r="76" fill="none" stroke="#c9a84c" stroke-width="0.8" opacity=".5"/>
-        <text x="100" y="88" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="18" font-style="italic" fill="#c9a84c" letter-spacing="2">Raw Desire</text>
-        <text x="100" y="110" text-anchor="middle" font-family="'Montserrat',sans-serif" font-size="9" fill="#c9a84c" letter-spacing="8" font-weight="300">STILOS</text>
-        <line x1="62" y1="120" x2="138" y2="120" stroke="#c9a84c" stroke-width="0.8" opacity=".6"/>
-        <text x="100" y="136" text-anchor="middle" font-family="'Montserrat',sans-serif" font-size="6.5" fill="#c9a84c" letter-spacing="5" opacity=".7">JEANS</text>
-      </svg>
+<section id="nosotros" style="display:block;padding:0">
+  <!-- HISTORIA + GALERÍA -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;min-height:420px" id="nos-grid">
+    <!-- Izquierda: galería -->
+    <div style="position:relative;background:#0a0a0a;overflow:hidden;min-height:380px" id="nos-gallery-wrap">
+      <div id="nos-gallery" style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;height:100%;gap:2px"></div>
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none" id="nos-gallery-ph">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="width:min(180px,38%);opacity:.4">
+          <circle cx="100" cy="100" r="96" fill="none" stroke="#c9a84c" stroke-width="1.5" stroke-dasharray="6 4"/>
+          <circle cx="100" cy="100" r="76" fill="none" stroke="#c9a84c" stroke-width="0.8" opacity=".5"/>
+          <text x="100" y="88" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="18" font-style="italic" fill="#c9a84c" letter-spacing="2">Raw Desire</text>
+          <text x="100" y="110" text-anchor="middle" font-family="'Montserrat',sans-serif" font-size="9" fill="#c9a84c" letter-spacing="8" font-weight="300">STILOS</text>
+          <line x1="62" y1="120" x2="138" y2="120" stroke="#c9a84c" stroke-width="0.8" opacity=".6"/>
+          <text x="100" y="136" text-anchor="middle" font-family="'Montserrat',sans-serif" font-size="6.5" fill="#c9a84c" letter-spacing="5" opacity=".7">JEANS</text>
+        </svg>
+      </div>
+    </div>
+    <!-- Derecha: texto historia -->
+    <div style="background:#0d0d0d;padding:56px 44px;display:flex;flex-direction:column;justify-content:center;border-left:1px solid rgba(201,168,76,.1)">
+      <p class="nos-ey" style="margin-bottom:14px">Nuestra Historia</p>
+      <div class="nos-h2" style="margin-bottom:18px">
+        <b>Nacimos del amor</b>
+        <em>y la dedicación.</em>
+      </div>
+      <p class="nos-text" style="max-width:340px;margin-bottom:16px">Raw Desire Stilos nació del sueño de un joven y su esposa que creyeron en la moda colombiana. Desde Bogotá, Colombia, hemos crecido con esfuerzo, pasión y compromiso — ofreciendo jeans y ropa femenina de calidad que realzan la esencia de cada mujer.</p>
+      <p class="nos-text" style="max-width:340px;margin-bottom:28px;font-style:italic;color:rgba(255,255,255,.4)">"Cada jean que hacemos lleva el alma de quienes lo crearon."</p>
+      <a href="https://wa.me/573507243351?text=Hola%21%20Quiero%20conocer%20más%20sobre%20Raw%20Desire%20Stilos%20🛍️" target="_blank" class="nos-cta" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Contáctanos
+      </a>
     </div>
   </div>
-  <div class="nos-right">
-    <div class="nos-main">
-      <p class="nos-ey">Sobre Nosotros</p>
-      <div class="nos-h2">
-        <b>Más que jeans,</b>
-        <em>una actitud.</em>
-      </div>
-      <p class="nos-text">En Raw Desire Stilos creemos que la moda es una forma de expresión. Diseñamos jeans que se adaptan a ti, a tu cuerpo y a tu esencia.</p>
-      <button class="nos-cta" onclick="document.getElementById('nosotros').scrollIntoView({behavior:'smooth'})">Conócenos</button>
+  <!-- PILARES -->
+  <div style="background:#0a0a0a;border-top:1px solid rgba(201,168,76,.1);display:grid;grid-template-columns:repeat(3,1fr)">
+    <div class="nos-feat" style="padding:32px 28px;border-right:1px solid rgba(201,168,76,.08)">
+      <div class="nos-feat-icon">✦</div>
+      <div class="nos-feat-text"><b>Diseños exclusivos</b><span>Pensados para la mujer colombiana</span></div>
     </div>
-    <div class="nos-features">
-      <div class="nos-feat">
-        <div class="nos-feat-icon">✦</div>
-        <div class="nos-feat-text">
-          <b>Diseños exclusivos</b>
-          <span>Pensados para ti</span>
-        </div>
-      </div>
-      <div class="nos-feat">
-        <div class="nos-feat-icon">♥</div>
-        <div class="nos-feat-text">
-          <b>Hechos con pasión</b>
-          <span>Cada detalle importa</span>
-        </div>
-      </div>
-      <div class="nos-feat">
-        <div class="nos-feat-icon">★</div>
-        <div class="nos-feat-text">
-          <b>Para mujeres reales</b>
-          <span>Como tú</span>
-        </div>
-      </div>
+    <div class="nos-feat" style="padding:32px 28px;border-right:1px solid rgba(201,168,76,.08)">
+      <div class="nos-feat-icon">♥</div>
+      <div class="nos-feat-text"><b>Hechos con pasión</b><span>Desde Bogotá para todo el país</span></div>
+    </div>
+    <div class="nos-feat" style="padding:32px 28px">
+      <div class="nos-feat-icon">★</div>
+      <div class="nos-feat-text"><b>Calidad garantizada</b><span>Fabricantes directos, sin intermediarios</span></div>
     </div>
   </div>
 </section>
@@ -1954,12 +1979,22 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,168,76,.1)}
       <p class="social-handle">@rawdesire.stilos</p>
     </div>
   </div>
+  <!-- BANNER COLOMBIANO -->
+  <div style="background:linear-gradient(135deg,#0d0d0d 0%,#141008 50%,#0d0d0d 100%);border-top:1px solid rgba(201,168,76,.15);border-bottom:1px solid rgba(201,168,76,.08);padding:28px 32px;text-align:center">
+    <p style="font-family:'Cormorant Garamond',serif;font-size:clamp(1rem,2vw,1.4rem);font-style:italic;color:var(--gold);letter-spacing:.08em;margin-bottom:6px">Orgullo colombiano, estilo sin límites.</p>
+    <p style="font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;gap:10px">
+      <span style="display:inline-block;width:20px;height:1px;background:rgba(201,168,76,.4)"></span>
+      Hecho en Colombia 🇨🇴 · Bogotá
+      <span style="display:inline-block;width:20px;height:1px;background:rgba(201,168,76,.4)"></span>
+    </p>
+  </div>
   <div class="footer-bottom">
     <p class="footer-copy">© 2025 Raw Desire Stilos. Todos los derechos reservados.</p>
     <div class="footer-links">
       <a href="#tienda">Tienda</a>
       <a href="#coleccion">Colección</a>
       <a href="#nosotros">Nosotros</a>
+      <a href="#" onclick="document.getElementById('modal-privacidad').style.display='flex';return false;" style="cursor:pointer">Política de Privacidad</a>
     </div>
   </div>
   <div style="max-width:900px;margin:0 auto;padding:28px 24px 0;text-align:center">
@@ -1976,6 +2011,32 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,168,76,.1)}
   </div>
 </footer>
 
+
+<!-- MODAL POLÍTICA DE PRIVACIDAD -->
+<div id="modal-privacidad" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.88);align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:#111;border:1px solid rgba(201,168,76,.2);max-width:680px;width:100%;max-height:88vh;overflow-y:auto;border-radius:2px;position:relative">
+    <div style="position:sticky;top:0;background:#111;border-bottom:1px solid rgba(201,168,76,.15);padding:20px 28px;display:flex;justify-content:space-between;align-items:center;z-index:1">
+      <p style="font-family:'Playfair Display',serif;font-size:1.1rem;color:#fff;letter-spacing:.04em;margin:0">Política de Privacidad</p>
+      <button onclick="document.getElementById('modal-privacidad').style.display='none'" style="background:none;border:none;color:rgba(255,255,255,.5);font-size:1.2rem;cursor:pointer;line-height:1">✕</button>
+    </div>
+    <div style="padding:28px 32px;font-size:.72rem;color:rgba(255,255,255,.6);line-height:1.85;letter-spacing:.02em">
+      <p style="color:rgba(255,255,255,.85);font-weight:600;margin-bottom:10px">POLÍTICA DE PRIVACIDAD</p>
+      <p style="margin-bottom:14px">El presente Política de Privacidad establece los términos en que <strong style="color:rgba(201,168,76,.9)">Raw Desire Stilos</strong> usa y protege la información que es proporcionada por sus usuarios al momento de utilizar su sitio web. Esta compañía está comprometida con la seguridad de los datos de sus usuarios. Cuando le pedimos llenar los campos de información personal con la cual usted pueda ser identificado, lo hacemos asegurando que sólo se empleará de acuerdo con los términos de este documento. Sin embargo esta Política de Privacidad puede cambiar con el tiempo o ser actualizada por lo que le recomendamos y enfatizamos revisar continuamente esta página para asegurarse que está de acuerdo con dichos cambios.</p>
+      <p style="color:rgba(255,255,255,.85);font-weight:600;margin:18px 0 8px">Información que es recogida</p>
+      <p style="margin-bottom:14px">Nuestro sitio web podrá recoger información personal por ejemplo: Nombre, información de contacto como su dirección de correo electrónica e información demográfica. Así mismo cuando sea necesario podrá ser requerida información específica para procesar algún pedido o realizar una entrega o facturación.</p>
+      <p style="color:rgba(255,255,255,.85);font-weight:600;margin:18px 0 8px">Uso de la información recogida</p>
+      <p style="margin-bottom:14px">Nuestro sitio web emplea la información con el fin de proporcionar el mejor servicio posible, particularmente para mantener un registro de usuarios, de pedidos en caso que aplique, y mejorar nuestros productos y servicios. Es posible que sean enviados correos electrónicos periódicamente a través de nuestro sitio con ofertas especiales, nuevos productos y otra información publicitaria que consideremos relevante para usted o que pueda brindarle algún beneficio, estos correos electrónicos serán enviados a la dirección que usted proporcione y podrán ser cancelados en cualquier momento.</p>
+      <p style="margin-bottom:14px">Raw Desire Stilos está altamente comprometido para cumplir con el compromiso de mantener su información segura. Usamos los sistemas más avanzados y los actualizamos constantemente para asegurarnos que no exista ningún acceso no autorizado.</p>
+      <p style="color:rgba(255,255,255,.85);font-weight:600;margin:18px 0 8px">Cookies</p>
+      <p style="margin-bottom:14px">Una cookie se refiere a un fichero que es enviado con la finalidad de solicitar permiso para almacenarse en su ordenador, al aceptar dicho fichero se crea y la cookie sirve entonces para tener información respecto al tráfico web, y también facilita las futuras visitas a una web recurrente. Nuestro sitio web emplea las cookies para poder identificar las páginas que son visitadas y su frecuencia. Esta información es empleada únicamente para análisis estadístico y después la información se elimina de forma permanente. Usted puede eliminar las cookies en cualquier momento desde su ordenador.</p>
+      <p style="color:rgba(255,255,255,.85);font-weight:600;margin:18px 0 8px">Enlaces a Terceros</p>
+      <p style="margin-bottom:14px">Este sitio web pudiera contener enlaces a otros sitios que pudieran ser de su interés. Una vez que usted de clic en estos enlaces y abandone nuestra página, ya no tenemos control sobre al sitio al que es redirigido y por lo tanto no somos responsables de los términos o privacidad ni de la protección de sus datos en esos otros sitios terceros.</p>
+      <p style="color:rgba(255,255,255,.85);font-weight:600;margin:18px 0 8px">Control de su información personal</p>
+      <p style="margin-bottom:14px">En cualquier momento usted puede restringir la recopilación o el uso de la información personal que es proporcionada a nuestro sitio web. Esta compañía no venderá, cederá ni distribuirá la información personal que es recopilada sin su consentimiento, salvo que sea requerido por un juez con un orden judicial.</p>
+      <p style="margin-bottom:0;color:rgba(255,255,255,.3);font-size:.64rem">Raw Desire Stilos se reserva el derecho de cambiar los términos de la presente Política de Privacidad en cualquier momento.</p>
+    </div>
+  </div>
+</div>
 <!-- WA FLOAT -->
 <a href="https://wa.me/573507243351" class="wa-float" id="wa-float" target="_blank" rel="noopener noreferrer">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="28" height="28">
@@ -2228,6 +2289,18 @@ footer{background:var(--dark2);border-top:1px solid rgba(201,168,76,.1)}
             </div>
           </div>
           <button class="adm-add-btn" style="margin-top:20px;max-width:260px" onclick="saveSlides()">✔ Guardar Sliders</button>
+        </div>
+        <!-- GALERÍA NOSOTROS -->
+        <div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:2px;padding:18px;margin-top:4px">
+          <p style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-d);margin-bottom:8px">📸 Galería — Sección Nosotros</p>
+          <p style="font-size:.6rem;color:rgba(255,255,255,.35);margin-bottom:18px;line-height:1.7">Sube hasta 4 fotos para mostrar en la sección Nosotros (lookbook, taller, equipo, productos). Las imágenes se adaptan automáticamente.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px" id="nos-img-admin">
+            <div id="nos-img-slot-0"></div>
+            <div id="nos-img-slot-1"></div>
+            <div id="nos-img-slot-2"></div>
+            <div id="nos-img-slot-3"></div>
+          </div>
+          <button class="adm-add-btn" style="margin-top:20px;max-width:260px" onclick="saveNosImgs()">✔ Guardar galería Nosotros</button>
         </div>
       </div>
     </div>
@@ -2625,8 +2698,9 @@ function closeSB(){document.getElementById('sb').classList.remove('on');document
 function pedirAhora(id){
   const p=prods.find(x=>x._fbId===id||x._fbId===String(id)||x.id===id);if(!p)return;
   const wa=site.wa||'573507243351';
-  const msg=encodeURIComponent(`Hola Stilos R-D, quiero realizar este pedido\n\n\u2022 ${p.name}\n  Precio: ${fmt(p.price)}\n  Cantidad: 1\n\nTotal: ${fmt(p.price)}`);
-  window.open(`https://wa.me/${wa}?text=${msg}`,'_blank');
+  const tallas=p.sizeFrom&&p.sizeTo?' Tallas: '+p.sizeFrom+' – '+p.sizeTo:'';
+  const lineas=['Hola! Quiero realizar este pedido en Raw Desire Stilos 🛍️','','• '+p.name,'  Precio: '+fmt(p.price)+tallas,'  Cantidad: 1','','Total: '+fmt(p.price),'','¿Tienen disponibilidad?'].join('\n');
+  window.open('https://wa.me/'+wa+'?text='+encodeURIComponent(lineas),'_blank');
 }
 
 // ── CART ──
@@ -2664,7 +2738,7 @@ function renderCart(){
     <button class="c-rm" onclick='rmCart("${i.id}")'>✕</button>
   </div>`).join('');
   const waLines=cart.map(i=>`\u2022 ${i.name}\n  Precio unitario: ${fmt(i.price)}\n  Cantidad: ${i.qty}\n  Subtotal: ${fmt(i.price*i.qty)}`).join('\n\n');
-  const waMsg=encodeURIComponent(`Hola Stilos R-D, quiero realizar este pedido\n\n${waLines}\n\nTotal: ${fmt(tot)}`);
+  const waMsg=encodeURIComponent('Hola! Quiero realizar este pedido en Raw Desire Stilos 🛍️\n\n'+waLines+'\n\nTotal: '+fmt(tot)+'\n\n¿Tienen disponibilidad?');
   el.innerHTML=`<div class="c-items">${items}</div><div class="c-sum"><div class="sr"><span>Total</span><span class="sr-tot">${fmt(tot)}</span></div><button class="wa-ord" onclick="window.open('https://wa.me/${wa}?text=${waMsg}','_blank')">💬 Pedir por WhatsApp</button></div>`;
 }
 
@@ -3100,6 +3174,7 @@ function scropAccept(key){
 function buildCroppers(){
   buildCropBox('prod-crop-mount','prod-new','3/4',null);
   buildCropBox('edit-crop-mount','prod-edit','3/4',null);
+  initNosGalleryAdmin();
   for(let i=0;i<3;i++){
     const key=`slide-${i}`;
     buildSliderCrop(`slide-crop-${i}`, key, async (dataUrl)=>{
@@ -3138,6 +3213,59 @@ async function saveSlides(){
   }
   await svS();
   toast(saved>0 ? '✔ Sliders guardados. Todos los visitantes los verán.' : '⚠ No hay imágenes. Usa "Guardar posición" en cada slide primero.');
+}
+
+// ── GALERÍA NOSOTROS ADMIN ──
+function initNosGalleryAdmin(){
+  for(let i=0;i<4;i++){
+    const slot = document.getElementById('nos-img-slot-'+i);
+    if(!slot) continue;
+    const cur = site['nosImg'+i]||'';
+    slot.innerHTML = `
+      <div style="border:1px solid rgba(255,255,255,.1);border-radius:2px;padding:10px;background:rgba(0,0,0,.3)">
+        <p style="font-size:.5rem;letter-spacing:.15em;color:rgba(255,255,255,.3);text-transform:uppercase;margin-bottom:8px;text-align:center">— Foto ${i+1} —</p>
+        <div style="width:100%;aspect-ratio:3/4;background:#0a0a0a;overflow:hidden;position:relative;margin-bottom:8px;border-radius:1px">
+          ${cur?`<img src="${cur}" style="width:100%;height:100%;object-fit:cover" id="nos-img-prev-${i}">`:`<div id="nos-img-prev-${i}" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.2);font-size:.6rem">Sin imagen</div>`}
+        </div>
+        <label style="display:block;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);padding:7px;text-align:center;cursor:pointer;font-size:.55rem;letter-spacing:.15em;color:rgba(201,168,76,.7);text-transform:uppercase;transition:all .2s" onmouseover="this.style.background='rgba(201,168,76,.15)'" onmouseout="this.style.background='rgba(201,168,76,.08)'">
+          📷 Subir foto
+          <input type="file" accept="image/*" style="display:none" onchange="loadNosImg(event,${i})">
+        </label>
+        ${cur?`<button onclick="removeNosImg(${i})" style="display:block;width:100%;margin-top:6px;background:none;border:1px solid rgba(255,80,80,.2);color:rgba(255,80,80,.5);font-size:.5rem;padding:5px;cursor:pointer;letter-spacing:.1em">✕ Quitar</button>`:''}
+      </div>`;
+  }
+}
+
+async function loadNosImg(e, idx){
+  const file = e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = async (ev)=>{
+    const dataUrl = ev.target.result;
+    toast('⏳ Comprimiendo imagen...');
+    try{
+      const compressed = await window._compressImg ? window._compressImg(dataUrl,600,800,0.78) : dataUrl;
+      site['nosImg'+idx] = compressed;
+      await svS();
+      renderNosGallery();
+      initNosGalleryAdmin();
+      toast('✔ Foto guardada. Se ve en la sección Nosotros.');
+    }catch(err){ toast('⚠ Error: '+err.message); }
+  };
+  reader.readAsDataURL(file);
+}
+
+async function removeNosImg(idx){
+  delete site['nosImg'+idx];
+  await svS();
+  renderNosGallery();
+  initNosGalleryAdmin();
+  toast('✔ Foto eliminada.');
+}
+
+async function saveNosImgs(){
+  await svS();
+  renderNosGallery();
+  toast('✔ Galería Nosotros guardada.');
 }
 
 // ── ADMIN: PRODUCTS ──
